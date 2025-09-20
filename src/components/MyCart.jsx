@@ -24,6 +24,35 @@ const MyCart = () => {
     0
   );
 
+  const placeOrder = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) return alert("Please login to place order");
+    if (cart.length === 0) return alert("Cart is empty");
+
+    try {
+      const res = await fetch("http://localhost:5000/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          items: cart,
+          address: "", // can be filled from a form later
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        return alert(json?.error || "Failed to place order");
+      }
+      alert("Order placed!");
+      dispatch({ type: "CLEAR" });
+    } catch (e) {
+      console.error(e);
+      alert("Network error");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#0b1125] text-white">
       <div className="mx-auto max-w-5xl px-4 py-8">
@@ -110,9 +139,9 @@ const MyCart = () => {
                 </button>
                 <button
                   className="rounded-lg bg-gradient-to-r from-yellow-400 to-yellow-500 px-5 py-2 font-semibold text-black hover:from-yellow-300 hover:to-yellow-400"
-                  onClick={() => alert("Checkout flow coming soon!")}
+                  onClick={placeOrder}
                 >
-                  Proceed to Checkout
+                  Place Order
                 </button>
               </div>
             </div>

@@ -2,6 +2,7 @@ import express from "express";
 import mongoDB from "./db.js";
 import createUserRouter from "./routes/CreateUser.js";
 import displayDataRouter from "./routes/DisplayData.js";
+import ordersRouter from "./routes/Orders.js";
 
 const app = express();
 const port = 5000;
@@ -27,6 +28,7 @@ app.use(express.json());
 // API routes
 app.use("/api", createUserRouter);
 app.use("/api", displayDataRouter);
+app.use("/api", ordersRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

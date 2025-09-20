@@ -10,6 +10,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
+    localStorage.removeItem("user");
     navigate("/login");
   };
 
@@ -17,10 +18,7 @@ const Navbar = () => {
 
   return (
     <nav className="bg-gray-900 text-white shadow-md">
-      <div
-        style={{ fontFamily: "Poppins, sans-serif" }}
-        className="container mx-auto flex items-center justify-between px-4 py-3"
-      >
+      <div style={{ fontFamily: "Poppins, sans-serif" }} className="container mx-auto flex items-center justify-between px-4 py-3">
         <Link to="/" className="text-3xl font-extrabold tracking-wide flex items-center">
           <span className="text-yellow-400">Go</span>
           <span className="text-white">Food</span>
@@ -43,9 +41,7 @@ const Navbar = () => {
           }`}
         >
           <li>
-            <Link to="/" className="block px-4 py-2 transition hover:text-yellow-400">
-              Home
-            </Link>
+            <Link to="/PersonalisedHome" className="block px-4 py-2 transition hover:text-yellow-400">Home</Link>
           </li>
 
           {localStorage.getItem("authToken") ? (
@@ -73,12 +69,8 @@ const Navbar = () => {
             </>
           ) : (
             <li className="lg:ml-4 lg:border-l lg:border-gray-700 lg:pl-4 flex space-x-4">
-              <Link to="/login" className="gradient-btn">
-                Login
-              </Link>
-              <Link to="/createUser" className="gradient-btn">
-                Signup
-              </Link>
+              <Link to="/login" className="gradient-btn">Login</Link>
+              <Link to="/createUser" className="gradient-btn">Signup</Link>
             </li>
           )}
         </ul>

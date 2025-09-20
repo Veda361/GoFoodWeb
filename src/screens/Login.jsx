@@ -6,7 +6,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
-  const [accepted, setAccepted] = useState(false); // if you want T&C
+  const [accepted, setAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [msg, setMsg] = useState("");
@@ -24,13 +24,29 @@ const Login = () => {
       const json = await response.json();
       console.log("Submitted credentials:", credentials);
       console.log("Backend response:", json);
+
       if (!json.success) {
         setMsg("Enter valid credentials");
         setSuccess(false);
       } else {
         setSuccess(true);
-        localStorage.setItem("authToken", json.authToken);
-        console.log(localStorage.getItem("authToken"));
+
+        // Save token and a lightweight user snapshot for personalization
+        if (json.user) {
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              _id: json.user._id,
+              name: json.user.name,
+              email: json.user.email,
+              location: json.user.location,
+            })
+          );
+        }
+        if (json.authToken) {
+          localStorage.setItem("authToken", json.authToken);
+        }
+
         setMsg("Login successful! Redirecting…");
         setTimeout(() => navigate("/"), 800);
       }
@@ -47,7 +63,6 @@ const Login = () => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
-  // Motion variants
   const cardVariants = {
     initial: { opacity: 0, y: 30, scale: 0.98 },
     animate: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: "easeOut" } },
@@ -61,7 +76,6 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-gray-900 via-black to-gray-800">
-      {/* Glow background blob */}
       <motion.div
         aria-hidden
         initial={{ opacity: 0, scale: 0.8 }}
@@ -74,7 +88,6 @@ const Login = () => {
         }}
       />
 
-      {/* Loading progress bar */}
       <AnimatePresence>
         {loading && (
           <motion.div
@@ -96,7 +109,6 @@ const Login = () => {
         whileHover="hover"
         className="relative w-full max-w-md rounded-2xl border border-purple-500/30 bg-gray-950/60 p-8 shadow-2xl backdrop-blur-xl"
       >
-        {/* Accent animated ring */}
         <motion.div
           aria-hidden
           initial={{ opacity: 0 }}
@@ -107,8 +119,7 @@ const Login = () => {
             background:
               "conic-gradient(from 0deg, rgba(168,85,247,0.25), rgba(236,72,153,0.25), rgba(168,85,247,0.25))",
             mask: "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
-            WebkitMask:
-              "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
+            WebkitMask: "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
             maskComposite: "exclude",
             WebkitMaskComposite: "xor",
             padding: 1,
@@ -125,11 +136,8 @@ const Login = () => {
         </motion.h2>
 
         <form onSubmit={handleSubmit} className="space-y-5 relative z-10" aria-live="polite">
-          {/* Email */}
           <motion.div custom={0} variants={fieldVariants} initial="initial" animate="animate">
-            <label htmlFor="email" className="block font-medium text-purple-300">
-              Email
-            </label>
+            <label htmlFor="email" className="block font-medium text-purple-300">Email</label>
             <motion.input
               id="email"
               type="email"
@@ -143,11 +151,8 @@ const Login = () => {
             />
           </motion.div>
 
-          {/* Password with eye toggle */}
           <motion.div custom={1} variants={fieldVariants} initial="initial" animate="animate">
-            <label htmlFor="password" className="block font-medium text-purple-300">
-              Password
-            </label>
+            <label htmlFor="password" className="block font-medium text-purple-300">Password</label>
             <div className="relative">
               <motion.input
                 id="password"
@@ -182,21 +187,11 @@ const Login = () => {
             </div>
           </motion.div>
 
-          {/* Optional: Terms checkbox (animated) */}
           <motion.div custom={2} variants={fieldVariants} initial="initial" animate="animate" className="flex items-center gap-3">
-            <input
-              id="accept"
-              type="checkbox"
-              className="h-4 w-4 cursor-pointer accent-purple-500"
-              checked={accepted}
-              onChange={(e) => setAccepted(e.target.checked)}
-            />
-            <label htmlFor="accept" className="cursor-pointer text-sm text-purple-200">
-              Remember me
-            </label>
+            <input id="accept" type="checkbox" className="h-4 w-4 cursor-pointer accent-purple-500" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} />
+            <label htmlFor="accept" className="cursor-pointer text-sm text-purple-200">Remember me</label>
           </motion.div>
 
-          {/* Message */}
           <AnimatePresence>
             {msg && (
               <motion.p
@@ -211,16 +206,11 @@ const Login = () => {
             )}
           </AnimatePresence>
 
-          {/* Submit with success morph */}
           <motion.button
             type="submit"
             whileHover={{ scale: success ? 1 : 1.04 }}
             whileTap={{ scale: success ? 1 : 0.96 }}
-            animate={
-              success
-                ? { backgroundColor: "rgb(16 185 129)", boxShadow: "0 0 20px rgba(16,185,129,0.7)" }
-                : {}
-            }
+            animate={success ? { backgroundColor: "rgb(16 185 129)", boxShadow: "0 0 20px rgba(16,185,129,0.7)" } : {}}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
             className={`flex w-full items-center justify-center gap-2 rounded-lg py-2 font-semibold text-white transition
               ${success ? "bg-emerald-500" : "bg-gradient-to-r from-purple-600 to-pink-500 shadow-[0_0_10px_rgba(168,85,247,0.8),0_0_20px_rgba(217,70,239,0.8)] hover:shadow-[0_0_20px_rgba(217,70,239,1),0_0_30px_rgba(168,85,247,1)]"}

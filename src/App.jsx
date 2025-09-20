@@ -5,6 +5,9 @@ import Login from "./screens/Login";
 import Signup from "./screens/Signup";
 import CartProvider from "./components/ContextReducer.jsx";
 import MyCart from "./components/MyCart.jsx"
+import MyOrders from "./screens/MyOrders.jsx";
+import PersonalizedHome from "./components/PersonalizedHome.jsx";
+
 const App = () => {
   return (
     <CartProvider>
@@ -22,7 +25,8 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/createuser" element={<Signup />} />
             <Route path="/mycart" element={<MyCart />} />
-
+            <Route path="/myOrders" element={<MyOrders />} />
+            <Route path="/PersonalisedHome" element={<PersonalizedHome />} />
           </Routes>
         </div>
       </Router>
