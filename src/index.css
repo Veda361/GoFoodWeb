@@ -1,3 +1,72 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Fancy Button inspired by Uiverse + Tailwind structure */
+.gradient-btn {
+  --border-radius: 12px;
+  --border-width: 3px;
+  position: relative;
+  display: inline-block;
+  padding: 0.6em 1.5em;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #000;
+  background: transparent; /* make inside transparent */
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  z-index: 1;
+}
+
+.gradient-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--border-radius);
+  background: linear-gradient(to right, #facc15, #fbbf24); /* Yellow base */
+  z-index: -2;
+}
+
+.gradient-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: var(--border-width);
+  border-radius: var(--border-radius);
+  background: linear-gradient(90deg, #facc15, #300d5e, #facc15);
+  background-size: 300% 300%;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: -1;
+  animation: borderMove 3s linear infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gradient-btn:hover::after {
+  opacity: 1;
+}
+
+.gradient-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.gradient-btn:active {
+  transform: scale(0.95);
+}
+
+@keyframes borderMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

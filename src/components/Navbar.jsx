@@ -1,8 +1,15 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import '../index.css';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+   const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    navigate("/login");
+  }
+ 
 
   return (
     <nav className="bg-gray-900 text-white shadow-md">
@@ -54,13 +61,12 @@ const Navbar = () => {
 
         {/* Navbar Links */}
         <ul
-          className={`lg:flex lg:space-x-6 absolute lg:static left-0 w-full lg:w-auto bg-gray-900 lg:bg-transparent transition-all duration-300 ease-in-out ${
-            isOpen ? "top-14" : "top-[-400px]"
-          }`}
+          className={`lg:flex lg:space-x-6 absolute lg:static left-0 w-full lg:w-auto bg-gray-900 lg:bg-transparent transition-all duration-300 ease-in-out ${isOpen ? "top-14" : "top-[-400px]"
+            }`}
         >
           <li>
             <Link
-              to="#"
+              to="/home"
               className="block px-4 py-2 hover:text-yellow-400 transition"
             >
               Home
@@ -90,14 +96,53 @@ const Navbar = () => {
               About
             </Link>
           </li>
-          <li>
-            <Link
-              to="/login"
-              className="ml-4 bg-yellow-400 text-black px-4 py-2 rounded-lg hover:bg-yellow-500 transition block text-center"
-            >
-              Login
-            </Link>
-          </li>
+          {(localStorage.getItem("authToken")) ?
+            <li>
+              <Link
+                to="/myOrders"
+                className="block px-4 py-2 hover:text-yellow-400 transition">
+                My Orders
+              </Link>
+            </li>
+            : ""}
+          {(!localStorage.getItem("authToken")) ?
+            <div>
+              <li className="lg:ml-4 lg:border-l lg:border-gray-700 lg:pl-4 flex space-x-4">
+                <Link
+                  to="/login"
+                  className="gradient-btn"
+                >
+                  Login
+                </Link>
+
+                <Link
+                  to="/createUser"
+                  className="gradient-btn"
+                >
+                  Signup
+                </Link>
+              </li>
+            </div>
+            :
+            <div className="flex gap-2">
+              <li className="lg:ml-4 lg:border-l lg:border-gray-700 lg:pl-4 flex space-x-4">
+                <Link
+                  to="/mycart"
+                  className="gradient-btn">
+                  Cart
+                </Link>
+              </li>
+            <div>
+              <li className="lg:ml-4 lg:border-l lg:border-gray-700 lg:pl-4 flex space-x-4">
+                <Link
+                  to="/##"
+                  className="gradient-btn" onClick={() => { localStorage.removeItem("authToken"); window.location.to = "/login"; }}>
+                  Log Out 
+                </Link>
+              </li>
+            </div>
+            </div>
+          }
         </ul>
       </div>
     </nav>

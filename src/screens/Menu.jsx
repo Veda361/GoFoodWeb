@@ -1,83 +1,165 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import FoodCard from "../components/FoodCard";
 
 const Menu = () => {
-  // Mock names representing each card’s cuisine; align with actual data source if available
-  const allItems = [
-    { id: 1, name: "Pizza Margherita" },
-    { id: 2, name: "Tacos" },
-    { id: 3, name: "Biryani" },
-    { id: 4, name: "Pasta Alfredo" },
-    // Add more if rendering more cards
-  ];
-
+  const [rawItems, setRawItems] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [query, setQuery] = useState("");
+  const [debounced, setDebounced] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return allItems;
-    return allItems.filter((it) => it.name.toLowerCase().includes(q));
+  useEffect(() => {
+    const id = setTimeout(() => setDebounced(query), 250);
+    return () => clearTimeout(id);
   }, [query]);
 
-  return (
-    <section className="relative min-h-screen w-full">
-      {/* Background with gradient overlay */}
-      <div
-        className="absolute inset-0 bg-center bg-cover"
-        style={{
-          backgroundImage:
-            "linear-gradient(to bottom right, rgba(17,24,39,0.65), rgba(147,51,234,0.45)), url('https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=2000&auto=format&fit=crop')",
-        }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/10" />
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/foodData", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        });
+        const data = await response.json();
 
-      <div className="relative z-10 p-6">
-        {/* Sticky search bar */}
-        <div className="sticky top-0 z-20 -mx-6 px-6 pt-2 pb-4 backdrop-blur bg-white/10">
-          <div className="max-w-4xl mx-auto">
-            <label htmlFor="menu-search" className="sr-only">Search food</label>
-            <div className="relative">
-              <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-white/80">
-                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M10 4a6 6 0 1 1 0 12 6 6 0 0 1 0-12Zm8.32 12.9 3.39 3.39-1.41 1.41-3.39-3.39A8 8 0 1 1 10 2a8 8 0 0 1 8.32 14.9Z" />
-                </svg>
-              </span>
-              <input
-                id="menu-search"
-                type="search"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search food (e.g., pizza, biryani, tacos)"
-                className="block w-full rounded-2xl border border-white/20 bg-white/15 text-white placeholder-white/70 pl-10 pr-28 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              />
+        const docs = data?.[0] || [];
+        const cats = data?.[1] || [];
+
+        const flattened = docs.flatMap((doc) =>
+          (doc.Items || []).map((it, idx) => {
+            const base = it.Img || it.img || "";
+            const img = base
+              ? `${base}?auto=format&fit=crop&w=800&q=80`
+              : "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80";
+
+            return {
+              id: it._id || `${doc._id}-${idx}`,
+              name: it.Name || it.name || "",
+              description: it.Description || it.description || "",
+              img,
+              price: it.Price ?? it.price ?? "",
+              category: doc.CategoryName || "",
+              rating: it.rating ?? 4.8,
+              reviews: it.reviews ?? 120,
+            };
+          })
+        );
+
+        setRawItems(flattened);
+
+        const docCats = docs.map((d) => ({ _id: d._id, CategoryName: d.CategoryName }));
+        const uniqueCats = Array.from(
+          new Map([...docCats, ...cats].map((c) => [c.CategoryName, c]))
+        ).values();
+        setCategories(uniqueCats);
+      } catch (error) {
+        console.error("Error fetching food data:", error);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  const filteredItems = useMemo(() => {
+    const q = debounced.trim().toLowerCase();
+    return rawItems.filter((item) => {
+      const matchesQuery =
+        !q ||
+        item.name.toLowerCase().includes(q) ||
+        item.description.toLowerCase().includes(q) ||
+        item.category.toLowerCase().includes(q);
+
+      const matchesCategory = selectedCategory === "All" || item.category === selectedCategory;
+
+      return matchesQuery && matchesCategory;
+    });
+  }, [debounced, rawItems, selectedCategory]);
+
+  const grouped = useMemo(() => {
+    const map = new Map();
+    for (const it of filteredItems) {
+      const k = it.category || "Uncategorized";
+      if (!map.has(k)) map.set(k, []);
+      map.get(k).push(it);
+    }
+    return Array.from(map.entries());
+  }, [filteredItems]);
+
+  return (
+    <div className="min-h-screen bg-[#0b1125] text-white">
+      <div className="sticky top-0 z-20 border-b border-gray-700 bg-[#0b132b]/95 px-6 py-4 backdrop-blur">
+        <h1 className="mb-3 text-center text-3xl font-bold">🍴 Our Menu</h1>
+
+        <div className="mx-auto flex max-w-5xl flex-col items-center gap-3 sm:flex-row">
+          <div className="relative w-full flex-1">
+            <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-white/70">
+              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10 4a6 6 0 1 1 0 12 6 6 0 0 1 0-12Zm8.32 12.9 3.39 3.39-1.41 1.41-3.39-3.39A8 8 0 1 1 10 2a8 8 0 0 1 8.32 14.9Z" />
+              </svg>
+            </span>
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search food (e.g., pizza, biryani, burger)"
+              className="block w-full rounded-2xl border border-white/20 bg-[#1c2541] px-10 py-3 text-white placeholder-white/60 outline-none ring-yellow-400/0 transition focus:ring-2"
+            />
+            {query && (
               <button
                 type="button"
                 onClick={() => setQuery("")}
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-xl bg-yellow-400 px-4 py-2 text-black font-semibold hover:bg-yellow-300 active:scale-95"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-white/10 px-3 py-1 text-sm text-white hover:bg-white/20"
+                aria-label="Clear search"
               >
                 Clear
               </button>
-            </div>
-            <p className="mt-2 text-sm text-white/80">
-              {query ? `${filtered.length} results` : "Type to filter cuisines"}
-            </p>
+            )}
           </div>
-        </div>
 
-        {/* Grid filtered by search */}
-        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-4">
-          {filtered.length === 0 ? (
-            <div className="col-span-full text-center text-white/90">
-              No matches. Try another keyword.
-            </div>
-          ) : (
-            filtered.map((it) => (
-              <FoodCard key={it.id} />
-            ))
-          )}
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="cursor-pointer rounded-xl border border-yellow-400/50 bg-[#1c2541]/60 px-4 py-3 text-white shadow-[0_0_10px_rgba(255,215,0,0.4)] backdrop-blur-md transition duration-300 hover:border-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-300"
+          >
+            <option key="all" value="All" className="bg-[#1c2541]">
+              All Categories
+            </option>
+            {categories.map((cat) => (
+              <option key={cat._id || cat.CategoryName} value={cat.CategoryName} className="bg-[#1c2541]">
+                {cat.CategoryName}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
-    </section>
+
+      <div className="px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+        {grouped.map(([catName, items]) => (
+          <div key={catName}>
+            <h2 className="mb-6 text-2xl font-bold text-yellow-400">{catName}</h2>
+
+            <div
+              className="
+                grid w-full gap-6
+                [grid-template-columns:repeat(auto-fill,minmax(240px,1fr))]
+                sm:[grid-template-columns:repeat(auto-fill,minmax(260px,1fr))]
+                md:[grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]
+              "
+            >
+              {items.map((item) => (
+                <div key={item.id} className="min-w-[240px]">
+                  <FoodCard item={item} />
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+
+        {filteredItems.length === 0 && (
+          <p className="mt-12 text-center text-lg text-gray-400">No food matches the search. 🍽️</p>
+        )}
+      </div>
+    </div>
   );
 };
 

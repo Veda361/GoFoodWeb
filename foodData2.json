@@ -1,0 +1,182 @@
+[
+  {
+    "CategoryName": "Burgers",
+    "Items": [
+      {
+        "Name": "Classic Cheeseburger",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "A juicy beef patty topped with melted cheddar cheese, fresh lettuce, and tomato, all sandwiched between a soft brioche bun."
+      },
+      {
+        "Name": "Bacon BBQ Burger",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "A smoky BBQ sauce, crispy bacon strips, and a perfectly grilled beef patty combine to create a flavor-packed burger experience."
+      },
+      {
+        "Name": "Veggie Burger",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "A hearty vegetarian patty made from black beans, quinoa, and spices, topped with avocado and served on a whole wheat bun."
+      },
+      {
+        "Name": "Chicken Avocado Burger",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "Grilled chicken breast paired with creamy avocado, lettuce, and tomato, all nestled in a toasted sesame seed bun."
+      },
+      {
+        "Name": "Mushroom Swiss Burger",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "A savory beef patty topped with sautéed mushrooms and melted Swiss cheese, finished with a dollop of garlic aioli."
+      }
+    ]
+  },
+  {
+    "CategoryName": "Pizzas",
+    "Items": [
+      {
+        "Name": "Margherita Pizza",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "A classic pizza topped with fresh mozzarella, basil leaves, and a drizzle of olive oil on a thin, crispy crust."
+      },
+      {
+        "Name": "Pepperoni Pizza",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "A hearty pizza loaded with spicy pepperoni slices and melted mozzarella cheese on a golden crust."
+      },
+      {
+        "Name": "BBQ Chicken Pizza",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "Grilled chicken, red onions, and cilantro drizzled with tangy BBQ sauce, all atop a cheesy base."
+      },
+      {
+        "Name": "Vegetarian Supreme Pizza",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "A medley of bell peppers, olives, onions, and mushrooms, topped with mozzarella and tomato sauce."
+      },
+      {
+        "Name": "Four Cheese Pizza",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "A rich blend of mozzarella, cheddar, Parmesan, and blue cheese melted to perfection on a crispy crust."
+      }
+    ]
+  },
+  {
+    "CategoryName": "Salads",
+    "Items": [
+      {
+        "Name": "Caesar Salad",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "Crisp romaine lettuce tossed with creamy Caesar dressing, crunchy croutons, and grated Parmesan cheese."
+      },
+      {
+        "Name": "Greek Salad",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "A refreshing mix of cucumbers, tomatoes, red onions, Kalamata olives, and feta cheese, dressed in olive oil and oregano."
+      },
+      {
+        "Name": "Quinoa Salad",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "Nutty quinoa combined with chickpeas, cucumbers, and cherry tomatoes, tossed in a lemon vinaigrette."
+      },
+      {
+        "Name": "Caprese Salad",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "Sliced tomatoes and fresh mozzarella layered with basil leaves, drizzled with balsamic glaze."
+      },
+      {
+        "Name": "Fruit Salad",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "A colorful assortment of seasonal fruits like berries, melons, and citrus, tossed together for a refreshing treat."
+      }
+    ]
+  },
+  {
+    "CategoryName": "Drinks",
+    "Items": [
+      {
+        "Name": "Iced Latte",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "A smooth blend of espresso and chilled milk, served over ice for a refreshing pick-me-up."
+      },
+      {
+        "Name": "Mango Smoothie",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "A creamy blend of ripe mangoes and yogurt, sweetened with a touch of honey."
+      },
+      {
+        "Name": "Green Tea",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "A soothing cup of green tea, known for its antioxidants and calming properties."
+      },
+      {
+        "Name": "Fresh Lemonade",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "A tangy and sweet beverage made from freshly squeezed lemons, sugar, and water."
+      },
+      {
+        "Name": "Cold Brew Coffee",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "Coffee brewed slowly with cold water for a smooth, less acidic taste."
+      }
+    ]
+  },
+  {
+    "CategoryName": "Desserts",
+    "Items": [
+      {
+        "Name": "Chocolate Lava Cake",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "A rich chocolate cake with a molten center, served warm with a scoop of vanilla ice cream."
+      },
+      {
+        "Name": "Strawberry Cheesecake",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "Creamy cheesecake topped with fresh strawberries and a drizzle of strawberry sauce."
+      },
+      {
+        "Name": "Apple Pie",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "A classic dessert featuring spiced apples encased in a flaky, buttery crust."
+      },
+      {
+        "Name": "Tiramisu",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "An Italian favorite made with layers of coffee-soaked ladyfingers and mascarpone cream."
+      },
+      {
+        "Name": "Fruit Tart",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "A buttery tart crust filled with pastry cream and topped with an assortment of fresh fruits."
+      }
+    ]
+  },
+  {
+    "CategoryName": "Snacks",
+    "Items": [
+      {
+        "Name": "French Fries",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "Golden, crispy fries seasoned with salt, perfect for dipping in ketchup or mayo."
+      },
+      {
+        "Name": "Onion Rings",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "Crispy battered onion rings, deep-fried to perfection."
+      },
+      {
+        "Name": "Mozzarella Sticks",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "Breaded and fried mozzarella cheese sticks, served with marinara sauce."
+      },
+      {
+        "Name": "Chicken Wings",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "Spicy and tangy chicken wings, perfect for sharing."
+      },
+      {
+        "Name": "Nachos",
+        "Img": "https://images.unsplash.com/photo-1603052875734-5e6e1e3b2c2b",
+        "Description": "Crispy tortilla chips topped with melted cheese, jalapeños, and sour cream."
+      }
+    ]
+  }
+]
