@@ -1,9 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatchCart } from "./ContextReducer.jsx";
 
 const FoodCard = ({ item }) => {
-  const handleAddToCart = () => {
+  const dispatch = useDispatchCart();
+  const [qty, setQty] = useState(1);
 
-  }
+  const handleAddToCart = () => {
+    dispatch({
+      type: "ADD",
+      item: {
+        id: item.id,
+        name: item.name,
+        price: Number(item.price) || 8.99,
+        img: item.img,
+        qty: Number(qty),
+      },
+    });
+  };
+
   return (
     <div className="overflow-hidden rounded-2xl border border-yellow-400/30 bg-gradient-to-br from-[#1c2541] via-[#3a506b] to-[#5bc0be] text-white shadow-lg transition hover:-translate-y-1 hover:scale-[1.02] hover:shadow-yellow-400/30">
       <div className="relative h-44 w-full bg-[#0b132b]">
@@ -31,12 +45,17 @@ const FoodCard = ({ item }) => {
         </div>
 
         <div className="mt-3 flex items-center gap-2">
-          <select className="rounded-md border border-yellow-300 bg-[#0b132b] px-2 py-1 text-sm text-white focus:ring-2 focus:ring-yellow-400">
-            <option>1</option><option>2</option><option>3</option>
+          <select
+            className="rounded-md border border-yellow-300 bg-[#0b132b] px-2 py-1 text-sm text-white focus:ring-2 focus:ring-yellow-400"
+            value={qty}
+            onChange={(e) => setQty(e.target.value)}
+          >
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
           </select>
           <button
-           className="flex-1 rounded-lg bg-gradient-to-r from-yellow-400 to-yellow-500 py-2 text-sm font-semibold text-black transition hover:from-yellow-300 hover:to-yellow-400"
-           onClick={handleAddToCart}>
+            className="flex-1 rounded-lg bg-gradient-to-r from-yellow-400 to-yellow-500 py-2 text-sm font-semibold text-black transition hover:from-yellow-300 hover:to-yellow-400"
+            onClick={handleAddToCart}
+          >
             🛒 Add to Cart
           </button>
         </div>
