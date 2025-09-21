@@ -1,12 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
 import FoodCard from "../components/FoodCard";
 
-const Menu = () => {
+const Menu = ({ cartIconRef }) => {
   const [rawItems, setRawItems] = useState([]);
   const [categories, setCategories] = useState([]);
   const [query, setQuery] = useState("");
   const [debounced, setDebounced] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState(
+    localStorage.getItem("selectedCategory") || "All"
+  );
 
   useEffect(() => {
     const id = setTimeout(() => setDebounced(query), 250);
@@ -23,8 +25,6 @@ const Menu = () => {
         const data = await response.json();
 
         const docs = data?.[0] || [];
-        const cats = data?.[1] || [];
-
         const flattened = docs.flatMap((doc) =>
           (doc.Items || []).map((it, idx) => {
             const base = it.Img || it.img || "";
@@ -47,11 +47,11 @@ const Menu = () => {
 
         setRawItems(flattened);
 
-        const docCats = docs.map((d) => ({ _id: d._id, CategoryName: d.CategoryName }));
         const uniqueCats = Array.from(
-          new Map([...docCats, ...cats].map((c) => [c.CategoryName, c]))
-        ).values();
-        setCategories(uniqueCats);
+          new Set(docs.map((d) => d.CategoryName).filter(Boolean))
+        ).sort((a, b) => a.localeCompare(b));
+
+        setCategories(["All", ...uniqueCats]);
       } catch (error) {
         console.error("Error fetching food data:", error);
       }
@@ -60,18 +60,25 @@ const Menu = () => {
     loadData();
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem("selectedCategory", selectedCategory);
+  }, [selectedCategory]);
+
   const filteredItems = useMemo(() => {
     const q = debounced.trim().toLowerCase();
-    return rawItems.filter((item) => {
-      const matchesQuery =
-        !q ||
+
+    let base =
+      selectedCategory === "All"
+        ? rawItems
+        : rawItems.filter((it) => it.category === selectedCategory);
+
+    return base.filter((item) => {
+      if (!q) return true;
+      return (
         item.name.toLowerCase().includes(q) ||
         item.description.toLowerCase().includes(q) ||
-        item.category.toLowerCase().includes(q);
-
-      const matchesCategory = selectedCategory === "All" || item.category === selectedCategory;
-
-      return matchesQuery && matchesCategory;
+        item.category.toLowerCase().includes(q)
+      );
     });
   }, [debounced, rawItems, selectedCategory]);
 
@@ -101,7 +108,7 @@ const Menu = () => {
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search food (e.g., pizza, biryani, burger)"
+              placeholder="Search food "
               className="block w-full rounded-2xl border border-white/20 bg-[#1c2541] px-10 py-3 text-white placeholder-white/60 outline-none ring-yellow-400/0 transition focus:ring-2"
             />
             {query && (
@@ -119,14 +126,11 @@ const Menu = () => {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="cursor-pointer rounded-xl border border-yellow-400/50 bg-[#1c2541]/60 px-4 py-3 text-white shadow-[0_0_10px_rgba(255,215,0,0.4)] backdrop-blur-md transition duration-300 hover:border-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-300"
+            className="cursor-pointer rounded-xl border border-yellow-400/50 bg-[#1c2541]/60 px-4 py-3 text-white shadow-[0_0_2px_rgba(255,215,0,0.4)] backdrop-blur-md transition duration-300 hover:border-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-300"
           >
-            <option key="all" value="All" className="bg-[#1c2541]">
-              All Categories
-            </option>
-            {categories.map((cat) => (
-              <option key={cat._id || cat.CategoryName} value={cat.CategoryName} className="bg-[#1c2541]">
-                {cat.CategoryName}
+            {categories.map((c) => (
+              <option key={c} value={c} className="bg-[#1c2541]">
+                {c}
               </option>
             ))}
           </select>
@@ -136,7 +140,9 @@ const Menu = () => {
       <div className="px-4 sm:px-6 lg:px-8 py-8 space-y-12">
         {grouped.map(([catName, items]) => (
           <div key={catName}>
-            <h2 className="mb-6 text-2xl font-bold text-yellow-400">{catName}</h2>
+            {/* <h2 className="mb-6 text-2xl font-bold text-yellow-400">{catName}</h2> */}
+            <h2 className="mb-6 text-2xl font-bold animate-rgb">{catName}</h2>
+
 
             <div
               className="
@@ -148,7 +154,7 @@ const Menu = () => {
             >
               {items.map((item) => (
                 <div key={item.id} className="min-w-[240px]">
-                  <FoodCard item={item} />
+                   <FoodCard item={item} cartIconRef={cartIconRef} />
                 </div>
               ))}
             </div>
@@ -156,7 +162,7 @@ const Menu = () => {
         ))}
 
         {filteredItems.length === 0 && (
-          <p className="mt-12 text-center text-lg text-gray-400">No food matches the search. 🍽️</p>
+          <p className="mt-12 text-center text-lg text-gray-400">No food matches the filters. 🍽️</p>
         )}
       </div>
     </div>

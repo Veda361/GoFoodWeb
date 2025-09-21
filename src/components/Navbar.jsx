@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "./ContextReducer.jsx";
 import "../index.css";
 
-const Navbar = () => {
+const Navbar = ({ setCartIconRef }) => {
   const [isOpen, setIsOpen] = useState(false);
   const cart = useCart();
   const navigate = useNavigate();
+  const cartIconRef = useRef(null);
+
+   React.useEffect(() => {
+    if (setCartIconRef) setCartIconRef(cartIconRef);
+  }, [setCartIconRef]);
+
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
@@ -51,9 +57,9 @@ const Navbar = () => {
                   My Orders
                 </Link>
               </li>
-              <li className="lg:ml-4 lg:border-l lg:border-gray-700 lg:pl-4 flex items-center">
-                <Link to="/mycart" className="relative gradient-btn">
-                  Cart
+              <li className="lg:ml-4 lg:border-l lg:border-gray-700 lg:pl-4 flex items-center justify-end">
+                <Link to="/mycart" className="relative gradient-btn" ref={cartIconRef}>
+                  🛒Cart
                   {cartCount > 0 && (
                     <span className="absolute -right-2 -top-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-yellow-400 px-1 text-xs font-bold text-black">
                       {cartCount}
